@@ -123,7 +123,6 @@ function adminOnly(req, res, next) {
 }
 
 // ====================== MySQL Connection ======================
-// اتصال أولي بدون database لإنشاءها إلا ما كانتش
 const dbInit = mysql.createConnection({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
@@ -194,10 +193,8 @@ app.post('/login', rateLimitLogin, async (req, res) => {
 
         const user = results[0];
 
-        // Support bcrypt ET sha256 (migration progressive)
         let passwordOk = false;
         if (user.password_hash.startsWith('$2')) {
-            // bcrypt hash
             passwordOk = await bcrypt.compare(password, user.password_hash);
         } else {
             // legacy sha256
@@ -212,8 +209,7 @@ app.post('/login', rateLimitLogin, async (req, res) => {
 
         if (!passwordOk) return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
 
-        loginAttempts.delete(req.ip); // ✅ Reset les tentatives après succès
-
+        loginAttempts.delete(req.ip); 
         const token = jwt.sign(
             { id: user.id, email: user.email, role: user.role, client_id: user.client_id },
             JWT_SECRET,
@@ -230,7 +226,6 @@ app.post('/login', rateLimitLogin, async (req, res) => {
     }
 });
 
-// Refresh token
 app.post('/refresh-token', authMiddleware, async (req, res) => {
     const token = jwt.sign(
         { id: req.user.id, email: req.user.email, role: req.user.role, client_id: req.user.client_id },
@@ -240,7 +235,6 @@ app.post('/refresh-token', authMiddleware, async (req, res) => {
     res.json({ token });
 });
 
-// ====================== CLIENTS ======================
 app.get('/clients', authMiddleware, adminOnly, async (req, res) => {
     try {
         const page  = parseInt(req.query.page)  || 1;
@@ -387,19 +381,17 @@ app.get('/clients/:id', authMiddleware, async (req, res) => {
     }
 });
 
-// ====================== SITES ======================
 app.get('/sites', authMiddleware, async (req, res) => {
     try {
-        const page   = parseInt(req.query.page)  || 1;
+     const page   = parseInt(req.query.page)  || 1;
         const limit  = parseInt(req.query.limit) || 50;
-        const search = req.query.search || '';
+    const search = req.query.search || '';
         const statut = req.query.statut || '';
         const offset = (page - 1) * limit;
 
-        let where = 'WHERE 1=1';
-        const params = [];
+    let where = 'WHERE 1=1';
+    const params = [];
 
-        // Client voit seulement ses sites
         if (req.user.role === 'client') {
             where += ' AND s.client_id = ?';
             params.push(req.user.client_id);
@@ -912,13 +904,11 @@ app.put('/users/:id/password', authMiddleware, async (req, res) => {
     }
 });
 
-// ====================== OTHER ======================
 app.get('/test', (req, res) => res.json({ status: 'ok', version: '2.0', auth: 'JWT' }));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'webmarko-crm.html'));
 });
 
-// ====================== START ======================
 app.listen(3000, () => {
     console.log('🚀 Server v2.1 on http://localhost:3000');
     console.log('🔐 JWT Authentication activé | Rate limiting actif');
