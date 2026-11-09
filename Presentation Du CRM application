@@ -1,0 +1,55 @@
+CRM Web Application – Webmarko
+
+Présentation :
+
+Developpement d'une plateforme CRM destinée à centraliser les informations clients et faciliter la gestion des activités de l'agencee.
+
+Fonctionnalités principales :
+
+- Gestion des clients et des utilisateurs.
+- Gestion des sites web.
+- Gestion des réclamations.
+- Gestion des fcctures.
+- Gestion des projets, devis et tâches.
+- Authentification et gestion des rôles.
+- Notifications par email.
+- Chat et notifications en temps réel.
+- Exportation des données.
+- Historique des opérations.
+
+Technologies utilisées :
+
+Frontend
+
+- HTML5
+- CSS3
+- JavaScript
+
+Backend
+
+- Node.js
+- Express.js
+
+Database
+
+- MySQL
+
+Security & Additional Tools
+
+- JWT
+- bcrypt
+- Helmet
+- CORS
+- Multer
+- Socket.io
+- Nodemailer
+
+Conception
+
+- UML Diagrams
+- MCD
+- MLD
+
+Objectif
+
+Améliorer la gestion de la relation client, centraliser les données et faciliter le suivi des opérations à travers une application web.
